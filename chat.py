@@ -10,7 +10,6 @@ from prompts import build_prompt
 
 load_dotenv()
 
-# ✅ FIX #3: Validate HF_TOKEN
 hf_token = os.getenv("HF_TOKEN")
 if not hf_token:
     raise ValueError(
@@ -19,7 +18,6 @@ if not hf_token:
     )
 os.environ["HF_TOKEN"] = hf_token
 
-# ✅ FIX #1: Check if vector DB exists
 if not os.path.exists(CHROMA_PATH):
     raise FileNotFoundError(
         f"❌ Vector DB not found at '{CHROMA_PATH}'.\n"
@@ -36,7 +34,6 @@ db = Chroma(
     embedding_function=embedding
 )
 
-# ✅ FIX #2: Validate GROQ_API
 groq_api = os.getenv("GROQ_API")
 if not groq_api:
     raise ValueError(

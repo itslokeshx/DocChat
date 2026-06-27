@@ -5,7 +5,6 @@ print("=" * 50)
 print("📄 DocChat - RAG Application")
 print("=" * 50)
 
-# Graceful error handling at startup
 try:
     print("\n✅ System initialized successfully!")
     print("Type your questions about the document (or 'exit' to quit)\n")
@@ -31,7 +30,7 @@ while True:
 
         print("🤖 DocChat is thinking...", end=" ", flush=True)
         answer = ask(question)
-        print("\r" + " " * 30 + "\r", end="")  # Clear loading message
+        print("\r" + " " * 30 + "\r", end="") 
 
         print(f"\n🤖 DocChat: {answer}")
 

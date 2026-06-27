@@ -10,7 +10,6 @@ from config import *
 
 load_dotenv()
 
-# ✅ FIX #3: Validate HF_TOKEN
 hf_token = os.getenv("HF_TOKEN")
 if not hf_token:
     raise ValueError(
