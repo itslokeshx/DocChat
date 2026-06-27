@@ -10,17 +10,31 @@ from config import *
 
 load_dotenv()
 
-os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
+# ✅ FIX #3: Validate HF_TOKEN
+hf_token = os.getenv("HF_TOKEN")
+if not hf_token:
+    raise ValueError(
+        "❌ HF_TOKEN environment variable not set.\n"
+        "Add it to your .env file for HuggingFace model access."
+    )
+os.environ["HF_TOKEN"] = hf_token
 
 
 def ingest():
 
-    print("Loading PDF...")
+    # ✅ FIX #4: Check if PDF file exists
+    if not os.path.exists(DATA_PATH):
+        raise FileNotFoundError(
+            f"❌ PDF file not found at '{DATA_PATH}'.\n"
+            f"Please ensure the file exists before running ingest."
+        )
+
+    print("📥 Loading PDF...")
 
     loader = PyMuPDFLoader(DATA_PATH)
     documents = loader.load()
 
-    print(f"Loaded {len(documents)} pages.")
+    print(f"✅ Loaded {len(documents)} pages.")
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
@@ -29,13 +43,13 @@ def ingest():
 
     chunks = splitter.split_documents(documents)
 
-    print(f"Created {len(chunks)} chunks.")
+    print(f"✂️ Created {len(chunks)} chunks.")
 
     embedding = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL
     )
 
-    print("Creating Vector Database...")
+    print("🔄 Creating Vector Database...")
 
     Chroma.from_documents(
         documents=chunks,
@@ -44,7 +58,7 @@ def ingest():
         persist_directory=CHROMA_PATH
     )
 
-    print("✅ Vector Database Created Successfully!")
+    print(f"✅ Vector Database Created Successfully at '{CHROMA_PATH}'!")
 
 
 if __name__ == "__main__":
