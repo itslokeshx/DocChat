@@ -10,7 +10,7 @@ from config import *
 from prompts import build_prompt
 
 _GREETINGS = re.compile(
-    r"^(hi|hello|hey|good\s*(morning|afternoon|evening)|howdy|sup|yo|greetings|what'?s\s*up)[!?.]*$",
+    r"^(hi+|h[ae]+llo+|hey+|good\s*(morning|afternoon|evening)|howdy|sup|yo+|greetings|what'?s\s*up)[!?.\s]*$",
     re.IGNORECASE
 )
 
@@ -66,8 +66,7 @@ def ask(question: str):
     )
 
 
-    DISTANCE_THRESHOLD = 0.7
-    relevant = [
+   relevant = [
         doc for doc, score in results_with_scores
         if score <= DISTANCE_THRESHOLD
     ]
