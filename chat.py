@@ -10,8 +10,21 @@ from prompts import build_prompt
 
 load_dotenv()
 
-os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
+# ✅ FIX #3: Validate HF_TOKEN
+hf_token = os.getenv("HF_TOKEN")
+if not hf_token:
+    raise ValueError(
+        "❌ HF_TOKEN environment variable not set.\n"
+        "Add it to your .env file for HuggingFace model access."
+    )
+os.environ["HF_TOKEN"] = hf_token
 
+# ✅ FIX #1: Check if vector DB exists
+if not os.path.exists(CHROMA_PATH):
+    raise FileNotFoundError(
+        f"❌ Vector DB not found at '{CHROMA_PATH}'.\n"
+        f"Please run 'python ingest.py' first to create the database."
+    )
 
 embedding = HuggingFaceEmbeddings(
     model_name=EMBEDDING_MODEL
@@ -23,11 +36,19 @@ db = Chroma(
     embedding_function=embedding
 )
 
+# ✅ FIX #2: Validate GROQ_API
+groq_api = os.getenv("GROQ_API")
+if not groq_api:
+    raise ValueError(
+        "❌ GROQ_API environment variable not set.\n"
+        "Add it to your .env file."
+    )
+
 llm = ChatGroq(
     model=GROQ_MODEL,
     temperature=0.1,
     max_tokens=1024,
-    api_key=os.getenv("GROQ_API")
+    api_key=groq_api
 )
 
 
@@ -38,8 +59,11 @@ def ask(question: str):
         k=4
     )
 
-    context = ""
+    # ✅ FIX #5: Handle empty search results
+    if not results:
+        return "❌ No relevant information found in the document to answer your question."
 
+    context = ""
     for doc in results:
         context += doc.page_content + "\n\n"
 
