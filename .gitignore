@@ -21,8 +21,9 @@ chroma_db/
 Chrome_DB/
 *.sqlite3
 
-# Jupyter Notebooks checkpoints
+# Jupyter Notebooks and checkpoints
 .ipynb_checkpoints/
+*.ipynb
 
 # IDE / Editor configurations
 .vscode/
