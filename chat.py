@@ -65,8 +65,8 @@ def ask(question: str):
         k=6
     )
 
-
-   relevant = [
+    DISTANCE_THRESHOLD = 1.2
+    relevant = [
         doc for doc, score in results_with_scores
         if score <= DISTANCE_THRESHOLD
     ]
