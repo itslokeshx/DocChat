@@ -1,4 +1,5 @@
 import os
+import re
 
 from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -7,6 +8,11 @@ from langchain_groq import ChatGroq
 
 from config import *
 from prompts import build_prompt
+
+_GREETINGS = re.compile(
+    r"^(hi|hello|hey|good\s*(morning|afternoon|evening)|howdy|sup|yo|greetings|what'?s\s*up)[!?.]*$",
+    re.IGNORECASE
+)
 
 load_dotenv()
 
@@ -51,21 +57,26 @@ llm = ChatGroq(
 
 def ask(question: str):
 
-    results = db.similarity_search(
+    if _GREETINGS.match(question.strip()):
+        return "Hello! Ask me anything about the document and I'll do my best to help."
+
+    results_with_scores = db.similarity_search_with_score(
         query=question,
-        k=4
+        k=6
     )
 
-    # ✅ FIX #5: Handle empty search results
-    if not results:
-        return "❌ No relevant information found in the document to answer your question."
 
-    context = ""
-    for doc in results:
-        context += doc.page_content + "\n\n"
+    DISTANCE_THRESHOLD = 0.7
+    relevant = [
+        doc for doc, score in results_with_scores
+        if score <= DISTANCE_THRESHOLD
+    ]
+
+    if not relevant:
+        return "I couldn't find relevant information about that in the document."
+
+    context = "".join(doc.page_content + "\n\n" for doc in relevant)
 
     prompt = build_prompt(context, question)
-
     response = llm.invoke(prompt)
-
     return response.content
