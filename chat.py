@@ -1,9 +1,8 @@
 import os
 
 from dotenv import load_dotenv
-
-from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 
 from config import *
@@ -13,25 +12,29 @@ load_dotenv()
 
 os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
 
+
 embedding = HuggingFaceEmbeddings(
     model_name=EMBEDDING_MODEL
 )
 
 db = Chroma(
-    persist_directory=CHROMA_PATH,
-    embedding_function=embedding,
     collection_name=COLLECTION_NAME,
+    persist_directory=CHROMA_PATH,
+    embedding_function=embedding
 )
 
 llm = ChatGroq(
     model=GROQ_MODEL,
-    api_key=os.getenv("GROQ_API"),
     temperature=0.1,
+    max_tokens=1024,
+    api_key=os.getenv("GROQ_API")
 )
-def ask(question):
+
+
+def ask(question: str):
 
     results = db.similarity_search(
-        question,
+        query=question,
         k=4
     )
 
