@@ -13,18 +13,15 @@ load_dotenv()
 hf_token = os.getenv("HF_TOKEN")
 if not hf_token:
     raise ValueError(
-        "❌ HF_TOKEN environment variable not set.\n"
-        "Add it to your .env file for HuggingFace model access."
+        " The HF_TOKEN is not present in the environment variables"
     )
-os.environ["HF_TOKEN"] = hf_token
-
 
 def ingest():
 
-    # ✅ FIX #4: Check if PDF file exists
+    # Check if PDF file exists
     if not os.path.exists(DATA_PATH):
         raise FileNotFoundError(
-            f"❌ PDF file not found at '{DATA_PATH}'.\n"
+            f"PDF file not found at '{DATA_PATH}'.\n"
             f"Please ensure the file exists before running ingest."
         )
 
