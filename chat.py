@@ -1,5 +1,4 @@
 import os
-import re
 
 from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -9,10 +8,7 @@ from langchain_groq import ChatGroq
 from config import *
 from prompts import build_prompt
 
-_GREETINGS = re.compile(
-    r"^(hi+|h[ae]+llo+|hey+|good\s*(morning|afternoon|evening)|howdy|sup|yo+|greetings|what'?s\s*up)[!?.\s]*$",
-    re.IGNORECASE
-)
+
 
 load_dotenv()
 
