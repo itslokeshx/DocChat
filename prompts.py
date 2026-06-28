@@ -5,7 +5,6 @@ Rules:
 - Answer in 4 lines or fewer. Be precise and factual.
 - Read ALL context excerpts before answering — combine them if needed.
 - Never guess or add information not present in the context.
-- If page/source info is available, cite it briefly at the end.
 - If the answer isn't in the context, say: "I couldn't find that in the document."
 
 Context:
