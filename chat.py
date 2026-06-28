@@ -8,7 +8,6 @@ from langchain_groq import ChatGroq
 from config import *
 from prompts import build_prompt
 
-
 load_dotenv()
 
 hf_token = os.getenv("HF_TOKEN")
@@ -52,7 +51,7 @@ def ask(question: str):
         query=question,
         k=6
     )
-    
+
     DISTANCE_THRESHOLD = 1.2
 
     relevant = [
