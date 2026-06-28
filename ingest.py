@@ -18,7 +18,6 @@ if not hf_token:
 
 def ingest():
 
-    # Check if PDF file exists
     if not os.path.exists(DATA_PATH):
         raise FileNotFoundError(
             f"PDF file not found at '{DATA_PATH}'.\n"
