@@ -9,20 +9,17 @@ from config import *
 from prompts import build_prompt
 
 
-
 load_dotenv()
 
 hf_token = os.getenv("HF_TOKEN")
 if not hf_token:
     raise ValueError(
-        "❌ HF_TOKEN environment variable not set.\n"
-        "Add it to your .env file for HuggingFace model access."
+        "The HF_TOKEN is not present in the environment variables"
     )
-os.environ["HF_TOKEN"] = hf_token
 
 if not os.path.exists(CHROMA_PATH):
     raise FileNotFoundError(
-        f"❌ Vector DB not found at '{CHROMA_PATH}'.\n"
+        f" Vector DB not found at '{CHROMA_PATH}'.\n"
         f"Please run 'python ingest.py' first to create the database."
     )
 
@@ -39,8 +36,7 @@ db = Chroma(
 groq_api = os.getenv("GROQ_API")
 if not groq_api:
     raise ValueError(
-        "❌ GROQ_API environment variable not set.\n"
-        "Add it to your .env file."
+        "The GROQ_API is not present in the environment variables"
     )
 
 llm = ChatGroq(
@@ -52,16 +48,13 @@ llm = ChatGroq(
 
 
 def ask(question: str):
-
-    if _GREETINGS.match(question.strip()):
-        return "Hello! Ask me anything about the document and I'll do my best to help."
-
     results_with_scores = db.similarity_search_with_score(
         query=question,
         k=6
     )
-
+    
     DISTANCE_THRESHOLD = 1.2
+
     relevant = [
         doc for doc, score in results_with_scores
         if score <= DISTANCE_THRESHOLD
