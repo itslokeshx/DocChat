@@ -1,4 +1,4 @@
-DATA_PATH = "data/Attached.pdf"
+DATA_PATH = "data/Not_Nice.pdf"
 
 CHROMA_PATH = "chroma_db"
 
