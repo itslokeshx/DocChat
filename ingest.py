@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from langchain_chroma import Chroma
 
 from config import *
@@ -40,8 +40,9 @@ def ingest():
 
     print(f"✂️ Created {len(chunks)} chunks.")
 
-    embedding = HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL
+    embedding = HuggingFaceEndpointEmbeddings(
+        model=EMBEDDING_MODEL,
+        huggingfacehub_api_token=hf_token
     )
 
     print("🔄 Creating Vector Database...")

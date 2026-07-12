@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 
@@ -22,8 +22,9 @@ if not os.path.exists(CHROMA_PATH):
         f"Please run 'python ingest.py' first to create the database."
     )
 
-embedding = HuggingFaceEmbeddings(
-    model_name=EMBEDDING_MODEL
+embedding = HuggingFaceEndpointEmbeddings(
+    model=EMBEDDING_MODEL,
+    huggingfacehub_api_token=hf_token
 )
 
 db = Chroma(
